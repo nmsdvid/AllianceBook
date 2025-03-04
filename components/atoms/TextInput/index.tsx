@@ -23,7 +23,7 @@ const GenericTextInput: React.FC<TextInputProps> = ({
       onChangeText={handleTextChange}
       placeholder={placeholder}
       placeholderTextColor="#666"
-      className="h-12 w-full px-4 rounded border border-yellow-900 mb-4 bg-gray-900 text-gray-300"
+      className="h-12 w-full px-4 rounded-lg border border-yellow-900 mb-4 bg-gray-900 text-gray-300"
     />
   );
 };

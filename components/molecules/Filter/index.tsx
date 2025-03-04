@@ -21,7 +21,7 @@ const Filter: React.FC<FilterProps> = ({ options, onSelect }) => {
           key={option}
           onPress={() => handleSelect(option)}
           className={`px-4 py-2 rounded-lg border border-yellow-900 ${
-            selectedOption === option ? "bg-yellow-600" : "border-yellow-900"
+            selectedOption === option ? "bg-yellow-500" : "border-yellow-900"
           }`}
         >
           <Text
