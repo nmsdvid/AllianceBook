@@ -2,19 +2,28 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
-import { useGetPeopleQuery } from "@/services/peopleApi";
+import { useGetPeopleInfiniteQuery } from "@/services/peopleApi";
 
 export default function App() {
-  const { data, error, isLoading } = useGetPeopleQuery({
-    page: 1,
-  });
+  const { data, isFetching, fetchNextPage, refetch } =
+    useGetPeopleInfiniteQuery({
+      page: 1,
+    });
 
-  console.log(data);
+  const people = data?.pages.flatMap((page) => page.results) ?? [];
+
+  const handleRefetch = async () => {
+    await refetch();
+  };
 
   return (
     <View style={styles.container}>
       <FlashList
-        data={data?.people}
+        data={people}
+        onRefresh={handleRefetch}
+        refreshing={isFetching}
+        onEndReached={() => !isFetching && fetchNextPage()}
+        onEndReachedThreshold={0.8}
         renderItem={({ item }) => (
           <View
             style={{ backgroundColor: "grey", height: 150 }}

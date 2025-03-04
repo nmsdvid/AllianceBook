@@ -3,19 +3,25 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const peopleApi = createApi({
   reducerPath: "peopleApi",
   baseQuery: fetchBaseQuery({ baseUrl: "https://swapi.py4e.com/api/" }),
-  endpoints: (builder) => ({
-    getPeople: builder.query({
-      query: ({ page = 1 }) => ({
-        url: "people",
-        params: {
-          page,
-        },
-      }),
-      transformResponse: (response) => ({
-        people: response.results,
-      }),
+  endpoints: (build) => ({
+    getPeople: build.infiniteQuery<
+      { results: any[]; next: string | null },
+      { page: number },
+      number
+    >({
+      infiniteQueryOptions: {
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages, lastPageParam) =>
+          lastPage.next ? lastPageParam + 1 : undefined,
+      },
+      query({ pageParam }) {
+        return {
+          url: "people",
+          params: { page: pageParam },
+        };
+      },
     }),
   }),
 });
 
-export const { useGetPeopleQuery } = peopleApi;
+export const { useGetPeopleInfiniteQuery } = peopleApi;
