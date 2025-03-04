@@ -6,7 +6,7 @@ export const peopleApi = createApi({
   endpoints: (build) => ({
     getPeople: build.infiniteQuery<
       { results: any[]; next: string | null },
-      { page: number },
+      { page: number; search?: string },
       number
     >({
       infiniteQueryOptions: {
@@ -14,10 +14,10 @@ export const peopleApi = createApi({
         getNextPageParam: (lastPage, allPages, lastPageParam) =>
           lastPage.next ? lastPageParam + 1 : undefined,
       },
-      query({ pageParam }) {
+      query({ pageParam, queryArg }) {
         return {
           url: "people",
-          params: { page: pageParam },
+          params: { page: pageParam, search: queryArg.search },
         };
       },
     }),
