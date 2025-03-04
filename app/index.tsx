@@ -1,9 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { useEffect, useState } from "react";
+import { View } from "react-native";
+import { useState } from "react";
 import { useGetPeopleInfiniteQuery } from "@/services/peopleApi";
 import TextInput from "@/components/atoms/TextInput";
 import FlashList from "@/components/molecules/FlashList";
+import Character from "@/components/atoms/Character";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -22,22 +24,8 @@ export default function App() {
     refetch();
   };
 
-  const renderItem = ({ item }: { item: any }) => (
-    <View
-      style={{
-        backgroundColor: "grey",
-        height: 150,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-      key={item.name}
-    >
-      <Text>{item.name}</Text>
-    </View>
-  );
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView className="bg-white flex-1">
       <View style={{ flexDirection: "column" }}>
         <TextInput
           handleChange={handleInputChange}
@@ -49,18 +37,9 @@ export default function App() {
         onRefresh={handleRefetch}
         refreshing={isFetching}
         onEndReached={fetchNextPage}
-        renderItem={renderItem}
+        renderItem={({ item }) => <Character item={item} />}
       />
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    height: "100%",
-    width: "100%",
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-});
