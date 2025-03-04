@@ -2,34 +2,19 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
+import { useGetPeopleQuery } from "@/services/peopleApi";
 
 export default function App() {
-  const [characters, setCharacters] = useState([]);
+  const { data, error, isLoading } = useGetPeopleQuery({
+    page: 1,
+  });
 
-  const getCharacters = async () => {
-    const url = "https://swapi.py4e.com/api/people";
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
+  console.log(data);
 
-      const json = await response.json();
-      console.log("json", json);
-      setCharacters(json.results);
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  useEffect(() => {
-    getCharacters();
-  }, []);
   return (
     <View style={styles.container}>
       <FlashList
-        data={characters}
-        style={{ width: 300 }}
+        data={data?.people}
         renderItem={({ item }) => (
           <View
             style={{ backgroundColor: "grey", height: 150 }}
