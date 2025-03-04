@@ -16,6 +16,7 @@ const blurhash =
 
 const Character: React.FC<ItemProps> = ({ item }) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchCharacterImage = async () => {
       try {
@@ -36,18 +37,30 @@ const Character: React.FC<ItemProps> = ({ item }) => {
   }, [item]);
 
   return (
-    <View className="bg-gray-600 mb-10">
-      {imageUrl ? (
-        <Image
-          recyclingKey={item?.name}
-          source={imageUrl}
-          placeholder={{ blurhash }}
-          className="w-32 h-32 rounded-full"
-        />
-      ) : (
-        <Text>No image available</Text>
-      )}
-      <Text>{item.name}</Text>
+    <View className="mb-10 rounded border border-yellow-900">
+      <View className="flex-row p-4">
+        <View>
+          {imageUrl ? (
+            <Image
+              recyclingKey={item?.name}
+              source={imageUrl}
+              placeholder={{ blurhash }}
+              className="w-16 h-16 rounded"
+              contentFit="cover"
+            />
+          ) : (
+            <View className="w-16 h-16 bg-gray-800 rounded items-center justify-center">
+              <Text className="text-yellow-600">No image</Text>
+            </View>
+          )}
+        </View>
+
+        <View className="ml-5">
+          <Text className="text-yellow-600 font-bold text-2xl">
+            {item.name}
+          </Text>
+        </View>
+      </View>
     </View>
   );
 };
