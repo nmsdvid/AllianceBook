@@ -1,8 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { FlashList } from "@shopify/flash-list";
 
 export default function App() {
+  const [characters, setCharacters] = useState([]);
+
   const getCharacters = async () => {
     const url = "https://swapi.py4e.com/api/people";
     try {
@@ -13,6 +16,7 @@ export default function App() {
 
       const json = await response.json();
       console.log("json", json);
+      setCharacters(json.results);
     } catch (error) {
       console.error(error.message);
     }
@@ -23,7 +27,19 @@ export default function App() {
   }, []);
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!a</Text>
+      <FlashList
+        data={characters}
+        style={{ width: 300 }}
+        renderItem={({ item }) => (
+          <View
+            style={{ backgroundColor: "grey", height: 150 }}
+            key={item.name}
+          >
+            <Text>{item.name}</Text>
+          </View>
+        )}
+        estimatedItemSize={10}
+      />
       <StatusBar style="auto" />
     </View>
   );
@@ -31,9 +47,9 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
+    height: "100%",
+    width: "100%",
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
