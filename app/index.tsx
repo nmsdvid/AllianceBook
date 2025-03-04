@@ -1,8 +1,9 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useEffect, useState } from "react";
-import { FlashList } from "@shopify/flash-list";
 import { useGetPeopleInfiniteQuery } from "@/services/peopleApi";
+import TextInput from "@/components/atoms/TextInput";
+import FlashList from "@/components/molecules/FlashList";
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -16,36 +17,39 @@ export default function App() {
 
   const handleRefetch = () => refetch();
 
-  const handleSearch = (text: string) => {
+  const handleInputChange = (text: string) => {
     setSearchQuery(text);
     refetch();
   };
+
+  const renderItem = ({ item }: { item: any }) => (
+    <View
+      style={{
+        backgroundColor: "grey",
+        height: 150,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      key={item.name}
+    >
+      <Text>{item.name}</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: "column" }}>
         <TextInput
-          value={searchQuery}
-          onChangeText={handleSearch}
+          handleChange={handleInputChange}
           placeholder="Search characters..."
-          style={{ height: 50, width: "100%", marginTop: 150 }}
         />
       </View>
       <FlashList
         data={people}
         onRefresh={handleRefetch}
         refreshing={isFetching}
-        onEndReached={() => !isFetching && fetchNextPage()}
-        onEndReachedThreshold={0.8}
-        renderItem={({ item }) => (
-          <View
-            style={{ backgroundColor: "grey", height: 150 }}
-            key={item.name}
-          >
-            <Text>{item.name}</Text>
-          </View>
-        )}
-        estimatedItemSize={45}
+        onEndReached={fetchNextPage}
+        renderItem={renderItem}
       />
       <StatusBar style="auto" />
     </View>
